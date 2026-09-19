@@ -1,0 +1,10 @@
+[package]
+name = "CP-Rust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[[bin]]
+name = "02_is_there"
+path = "src/bin/hand-on_02/02_is_there.rs"
