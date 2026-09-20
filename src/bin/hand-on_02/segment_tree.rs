@@ -20,7 +20,7 @@ impl SegmentTree {
     }
 
     pub fn insert(&mut self, start: usize, end: usize) {
-        let id = segments.len();
+        let id = self.segments.len();
         let segment = Segment { id, start, end };
         self.segments.push(segment);
         self.insert_rec(1, 0, self.max_val, start, end, id);
@@ -53,7 +53,7 @@ impl SegmentTree {
         }
     }
 
-    pub fn query(&self, x: usize) -> Vec<Segment> {
+    pub fn query(&mut self, x: usize) -> Vec<Segment> {
         if x > self.max_val {
             return Vec::new();
         }
@@ -78,8 +78,7 @@ impl SegmentTree {
         if x <= mid {
             self.query_rec(left_node, start, mid, x, result);
         } else {
-            self.query_rec(right_node, mid+1, end, x, result);
+            self.query_rec(right_node, mid + 1, end, x, result);
         }
-
     }
 }

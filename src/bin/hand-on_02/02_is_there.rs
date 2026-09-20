@@ -1,4 +1,4 @@
-use std::collections::btree_map::Values;
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io;
@@ -23,27 +23,44 @@ fn main() -> io::Result<()> {
 
     let content_in = fs::read_to_string(test_input)?;
     let content_out = fs::read_to_string(test_output)?;
-    let mut values = content_in.split_whitespace();
 
-    let n: usize = values.next().unwrap().parse().unwrap();
-    let m: usize = values.next().unwrap().parse().unwrap();
+    let mut values_in = content_in.split_whitespace();
+    let mut values_out = content_out.split_whitespace();
 
-    let mut segments = vec![0; n + 1];
+    let n: usize = values_in.next().unwrap().parse().unwrap();
+    let m: usize = values_in.next().unwrap().parse().unwrap();
 
+    let mut segments: Vec<i32> = vec![0; n + 1];
     for _ in 0..n {
-        let l: usize = values.next().unwrap().parse().unwrap();
-        let r: usize = values.next().unwrap().parse().unwrap();
+        let l: usize = values_in.next().unwrap().parse().unwrap();
+        let r: usize = values_in.next().unwrap().parse().unwrap();
         segments[l] += 1;
         segments[r + 1] -= 1;
     }
 
-    for _ in 0..m {
-        let l: i32 = values.next().unwrap().parse().unwrap();
-        let r: i32 = values.next().unwrap().parse().unwrap();
-        let k: i32 = values.next().unwrap().parse().unwrap();
+    let mut current_sum = 0;
+    let mut map: HashMap<i32, Vec<usize>> = HashMap::new();
+    for (idx, &val) in segments.iter().enumerate().take(n) {
+        current_sum += val;
+        map.entry(current_sum).or_default().push(idx);
     }
 
-    println!("{}, {}", n, m);
+    for i in 0..m {
+        let mut result = 0;
+        let l: usize = values_in.next().unwrap().parse().unwrap();
+        let r: usize = values_in.next().unwrap().parse().unwrap();
+        let k: i32 = values_in.next().unwrap().parse().unwrap();
+
+        if let Some(arr) = map.get(&k) {
+            let idx = arr.partition_point(|&pos| pos < l);
+            if idx < arr.len() && arr[idx] <= r {
+                result = 1;
+            }
+        }
+
+        let expected: i32 = values_out.next().unwrap().parse().unwrap();
+        assert_eq!(result, expected, "Error in index {}", i);
+    }
 
     Ok(())
 }
