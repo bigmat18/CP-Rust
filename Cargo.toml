@@ -18,6 +18,10 @@ name = "03_is_there"
 path = "src/bin/hand-on_02/03_is_there.rs"
 
 [[bin]]
+name = "04_is_there"
+path = "src/bin/hand-on_02/04_is_there.rs"
+
+[[bin]]
 name = "01_holiday_planning"
 path = "src/bin/hand-on_03/01_holiday_planning.rs"
 

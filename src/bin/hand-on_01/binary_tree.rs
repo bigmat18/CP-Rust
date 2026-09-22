@@ -14,6 +14,10 @@ impl Node {
             id_right: None,
         }
     }
+
+    fn is_leaf(&self) -> bool {
+        self.id_left.is_none() && self.id_right.is_none()
+    }
 }
 
 pub struct BinaryTree {
@@ -28,99 +32,99 @@ impl BinaryTree {
     }
 
     pub fn add_node(&mut self, parent_id: usize, key: i32, is_left: bool) -> usize {
-        assert!(
-            parent_id < self.nodes.len(),
-            "Parent node id does not exist"
-        );
+        assert!(parent_id < self.nodes.len(), "Parent node id does not exist");
         if is_left {
             assert!(
-                self.nodes[parent_id].id_left == None,
-                "Parent node has the left child already set"
+                self.nodes[parent_id].id_left.is_none(),
+                "Parent node already has a left child"
             );
         } else {
             assert!(
-                self.nodes[parent_id].id_right == None,
-                "Parent node has the right child already set"
+                self.nodes[parent_id].id_right.is_none(),
+                "Parent node already has a right child"
             );
         }
 
         let child_id = self.nodes.len();
         self.nodes.push(Node::new(key));
 
-        let child = if is_left {
-            &mut self.nodes[parent_id].id_left
+        if is_left {
+            self.nodes[parent_id].id_left = Some(child_id);
         } else {
-            &mut self.nodes[parent_id].id_right
-        };
-
-        *child = Some(child_id);
+            self.nodes[parent_id].id_right = Some(child_id);
+        }
 
         child_id
     }
 
     pub fn check_bst(&self) -> bool {
-        self.rec_check_bst(0)
-    }
-
-    fn rec_check_bst(&self, node_id: usize) -> bool {
-        let node = &self.nodes[node_id];
-
-        if let Some(left_id) = node.id_left {
-            if self.nodes[left_id].key >= node.key {
-                return false;
-            }
-        }
-
-        if let Some(right_id) = node.id_right {
-            if self.nodes[right_id].key <= node.key {
-                return false;
-            }
-        }
-
-        let left_bst = if let Some(left_id) = node.id_left {
-            self.rec_check_bst(left_id)
-        } else {
-            true
-        };
-
-        let right_bst = if let Some(right_id) = node.id_right {
-            self.rec_check_bst(right_id)
-        } else {
-            true
-        };
-
-        left_bst && right_bst
-    }
-
-    pub fn max_path_sum(&self) -> i32 {
         if self.nodes.is_empty() {
-            return 0;
+            return true;
         }
-
-        let mut result = i32::MIN;
-        let val = self.max_path_sum_rec(0, &mut result);
-        if result == i32::MIN {
-            return val;
-        } else {
-            return result;
-        }
+        self.rec_check_bst(0, None, None)
     }
 
-    fn max_path_sum_rec(&self, node_id: usize, max_sum: &mut i32) -> i32 {
+    fn rec_check_bst(&self, node_id: usize, min: Option<i32>, max: Option<i32>) -> bool {
         let node = &self.nodes[node_id];
 
-        let left_val = node.id_left.map(|id| self.max_path_sum_rec(id, max_sum));
-        let right_val = node.id_right.map(|id| self.max_path_sum_rec(id, max_sum));
-
-        match (left_val, right_val) {
-            (Some(l_val), Some(r_val)) => {
-                *max_sum = cmp::max(*max_sum, l_val + r_val + node.key);
-                node.key + cmp::max(l_val, r_val)
+        if let Some(min_val) = min {
+            if node.key <= min_val {
+                return false;
             }
-            (Some(l_val), None) => node.key + l_val,
-            (None, Some(r_val)) => node.key + r_val,
-            (None, None) => node.key,
+        }
+        if let Some(max_val) = max {
+            if node.key >= max_val {
+                return false;
+            }
+        }
+
+        let left_ok = match node.id_left {
+            Some(left_id) => self.rec_check_bst(left_id, min, Some(node.key)),
+            None => true,
+        };
+
+        let right_ok = match node.id_right {
+            Some(right_id) => self.rec_check_bst(right_id, Some(node.key), max),
+            None => true,
+        };
+
+        left_ok && right_ok
+    }
+
+    pub fn max_path_sum(&self) -> Option<i32> {
+        if self.nodes.is_empty() {
+            return None;
+        }
+
+        let mut max_sum = None;
+        let root_branch = self.rec_max_leaf_path(0, &mut max_sum);
+
+        max_sum
+    }
+
+    fn rec_max_leaf_path(&self, node_id: usize, max_sum: &mut Option<i32>) -> i32 {
+        let node = &self.nodes[node_id];
+
+        if node.is_leaf() {
+            return node.key;
+        }
+
+        let left_sum = node.id_left.map(|id| self.rec_max_leaf_path(id, max_sum));
+        let right_sum = node.id_right.map(|id| self.rec_max_leaf_path(id, max_sum));
+
+        match (left_sum, right_sum) {
+            (Some(l), Some(r)) => {
+                let current_leaf_to_leaf = l + r + node.key;
+                *max_sum = Some(match *max_sum {
+                    Some(cur) => cmp::max(cur, current_leaf_to_leaf),
+                    None => current_leaf_to_leaf,
+                });
+
+                node.key + cmp::max(l, r)
+            }
+            (Some(l), None) => node.key + l,
+            (None, Some(r)) => node.key + r,
+            (None, None) => unreachable!(),
         }
     }
 }
-
