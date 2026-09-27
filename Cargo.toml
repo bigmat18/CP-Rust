@@ -5,26 +5,102 @@ edition = "2024"
 
 [dependencies]
 
+[[test]]
+name = "01_check_bst"
+path = "hand-on_01/01_check_bst.rs"
+
+[[test]]
+name = "02_max_path_sum"
+path = "hand-on_01/02_max_path_sum.rs"
+
 [[bin]]
 name = "01_min_max"
-path = "src/bin/hand-on_02/01_min_max.rs"
+path = "hand-on_02/01_min_max/solution.rs"
 
 [[bin]]
 name = "02_is_there"
-path = "src/bin/hand-on_02/02_is_there.rs"
+path = "hand-on_02/02_is_there/solution.rs"
 
 [[bin]]
-name = "03_is_there"
-path = "src/bin/hand-on_02/03_is_there.rs"
+name = "is_there_sweep_line"
+path = "hand-on_02/extra/is_there_sweep_line.rs"
 
 [[bin]]
-name = "04_is_there"
-path = "src/bin/hand-on_02/04_is_there.rs"
+name = "is_there_merge_sort"
+path = "hand-on_02/extra/is_there_merge_sort.rs"
 
 [[bin]]
 name = "01_holiday_planning"
-path = "src/bin/hand-on_03/01_holiday_planning.rs"
+path = "hand-on_03/01_holiday_planning/solution.rs"
 
 [[bin]]
 name = "02_design_course"
-path = "src/bin/hand-on_03/02_design_course.rs"
+path = "hand-on_03/02_design_course/solution.rs"
+
+[[bin]]
+name = "01_kadanes_algorithm"
+path = "01_kadanes_algorithm/solution.rs"
+
+[[bin]]
+name = "02_trapping_rain_water"
+path = "02_trapping_rain_water/solution.rs"
+
+[[bin]]
+name = "03_find_peak_element"
+path = "03_find_peak_element/solution.rs"
+
+[[bin]]
+name = "04_check_integers_coverage"
+path = "04_check_integers_coverage/solution.rs"
+
+[[bin]]
+name = "05_longest_k_good_sequence"
+path = "05_longest_k_good_sequence/solution.rs"
+
+[[bin]]
+name = "06_frogs_and_mosquitoes"
+path = "06_frogs_and_mosquitoes/solution.rs"
+
+[[bin]]
+name = "07_contigues_subarray_sum"
+path = "07_contigues_subarray_sum/solution.rs"
+
+[[bin]]
+name = "08_update_array"
+path = "08_update_array/solution.rs"
+
+[[bin]]
+name = "09_nested_segments"
+path = "09_nested_segments/solution.rs"
+
+[[bin]]
+name = "10_powerfull_array"
+path = "10_powerfull_array/solution.rs"
+
+[[bin]]
+name = "11_longest_common_subsequence"
+path = "11_longest_common_subsequence/solution.rs"
+
+[[bin]]
+name = "12_minimum_number_of_jumps"
+path = "12_minimum_number_of_jumps/solution.rs"
+
+[[bin]]
+name = "13_subset_sum"
+path = "13_subset_sum/solution.rs"
+
+[[bin]]
+name = "14_longest_increasing_subsequence"
+path = "14_longest_increasing_subsequence/solution.rs"
+
+[[bin]]
+name = "15_N_meetings_in_the_rooms"
+path = "15_N_meetings_in_the_rooms/solution.rs"
+
+[[bin]]
+name = "16_wilbur_and_array"
+path = "16_wilbur_and_array/solution.rs"
+
+[[bin]]
+name = "17_wood_cutters"
+path = "17_wood_cutters/solution.rs"
