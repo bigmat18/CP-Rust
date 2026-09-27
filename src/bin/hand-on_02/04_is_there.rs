@@ -97,11 +97,11 @@ fn main() -> io::Result<()> {
 
     let mut queries: Vec<Vec<(usize, usize, usize, i32)>> = vec![Vec::new(); n];
     for idx in 0..m {
-        let l: usize = values_in.next().unwrap().parse().unwrap();
-        let r: usize = values_in.next().unwrap().parse().unwrap();
+        let i: usize = values_in.next().unwrap().parse().unwrap();
+        let j: usize = values_in.next().unwrap().parse().unwrap();
         let k: i32 = values_in.next().unwrap().parse().unwrap();
 
-        queries[r].push((idx, l, r, k));
+        queries[j].push((idx, i, j, k));
     }
 
     let mut st = SegmentTree::new(n + 1);
