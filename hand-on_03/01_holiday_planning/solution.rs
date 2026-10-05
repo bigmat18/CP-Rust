@@ -53,31 +53,28 @@ fn main() -> io::Result<()> {
     let n: usize = values_in.next().unwrap().parse().unwrap();
     let d: usize = values_in.next().unwrap().parse().unwrap();
 
-    let mut psum: Vec<Vec<i32>> = Vec::with_capacity(n);
+    let mut dp = vec![0i32; d + 1];
+    let mut psum = vec![0i32; d + 1];
+
     for _ in 0..n {
-        let mut v = vec![0; d+1];
         let mut sum = 0;
         for i in 1..=d {
             let num: i32 = values_in.next().unwrap().parse().unwrap();
             sum += num;
-            v[i] = sum;
+            psum[i] = sum;
         }
-        psum.push(v);
-    }
 
-    let mut dp = vec![vec![0; d+1]; n+1];
-    for i in 1..=n {
-        for j in 1..=d {
-            let mut max: i32 = i32::MIN;
-            for k in 0..=j {
-                max = cmp::max(dp[i-1][j-k] + psum[i-1][k], max);
+        for j in (1..=d).rev() {
+            let mut best = dp[j];
+            for k in 1..=j {
+                best = cmp::max(best, dp[j - k] + psum[k]);
             }
-            dp[i][j] = max;
+            dp[j] = best;
         }
     }
 
     let expected: i32 = values_out.next().unwrap().parse().unwrap();
-    assert_eq!(dp[n][d], expected, "Error in test {}", test_num);
+    assert_eq!(dp[d], expected, "Error in test {}", test_num);
 
 
     Ok(())
