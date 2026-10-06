@@ -7,32 +7,26 @@ pub struct Solution;
 
 impl Solution {
     pub fn is_covered(ranges: Vec<Vec<i32>>, left: i32, right: i32) -> bool {
-        let mut target = right - left + 1;
-        let mut map: Vec<bool> = vec![false; target as usize];
+        let max_val = ranges.iter().map(|r| r[1]).max().unwrap_or(0).max(right);
+        let mut diff = vec![0; (max_val + 2) as usize];
 
-        for range in &ranges {
-            if range[0] < left && range[1] < left {
-                continue;
-            } 
+        for r in ranges {
+            let start = r[0] as usize;
+            let end = r[1] as usize;
+            diff[start] += 1;
+            diff[end + 1] -= 1;
+        }
 
-            if range[0] > right && range[1] > right {
-                continue;
-            }
+        let mut current_coverage = 0;
+        for i in 1..=right {
+            current_coverage += diff[i as usize];
 
-            for num in cmp::max(range[0], left)..=cmp::min(range[1], right) {
-                let i : usize = (num - left) as usize;
-                if !map[i] {
-                    map[i] = true;
-                    target -= 1;
-                }
-
-                if target == 0 {
-                    return true;
-                }
+            if i >= left && current_coverage == 0 {
+                return false;
             }
         }
 
-        return false;
+        true
     }
 }
 
